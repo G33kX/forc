@@ -12,10 +12,12 @@ This is an insider tool that has been open sourced, but feature requests and col
 
 **Exports to:**
 
-- SVGinOT (Linux, Windows 10, Firefox 50+, macOS 10.14+)
-- sbix (macOS 10.7+)
-- sbix packaged in a iOS Configuration Profile (iOS 7+)
-- CBx (Certain Samsung phones, rooted Android devices)
+- **SVGinOT**: SVGinOT
+- **sbixTT**: (macOS format) sbix with TrueType ligatures 
+- **sbixOT**: sbix with OpenType ligatures
+- **sbixTT for iOS**: (iOS format) sbix with TrueType ligatures, packaged in an iOS Configuration Profile.
+- **sbixOT for iOS**: sbix with OpenType ligatures, packaged in an iOS Configuration Profile. (currently just a development/research thing)
+- **CBDT/CBLC** (Google/Android format)
 
 
 **Other features:**
@@ -23,29 +25,19 @@ This is an insider tool that has been open sourced, but feature requests and col
 - Arbitrary Unicode codepoints - you can use whatever codepoints you want, including PUA.
 - Support for ligatures.
 - Support for VS16.
+- Support for ZWJ.
 - Can be used from [orxporter](https://github.com/mutantstandard/orxporter) for seamlessly building an entire set of emoji.
+- Strict validation of codepoints and metadata, making sure you make valid and highly compatible fonts.
 
 
 ## Limitations
 
-forc is still in development and is not ready for use:
-
-### Current
-
-I'm still learning how to encode fonts, so these will quickly clear up as time goes on.
-
-- Currently only sbix and SVGinOT fonts are visible and working.
-- Currently all of the formats generated are only considered valid in macOS 10.14 and iOS 12.
-- Metrics are not consistent across formats.
-- I can't get consistent or usable metrics in vertical writing orientation.
-- VS16 support isn't 100%
-- It currently doesn't have the code supporting iOS Configuration Profile output.
-- There's no documentation on how to make manifests yet.
+forc is still in development and is not ready for use. Various exports will only either work in limited contexts, with certain kinds of inputs or will not be complete, valid fonts.
 
 
-### Planned
+## Planned Limitations
 
-- You can't have black and white fallbacks. forc just inserts dummy and empty `glyf` data to please font validation processes. forc expects that you only want to compile and see colour emoji data.
+Black and white fallbacks will not be produced. forc just inserts dummy and empty `glyf` data to please font validation processes. forc expects that you only want to compile and see colour emoji data. forc font exports can only be seen in computing environments that support colour glyphs.
 
 
 ## Dependencies
@@ -54,6 +46,9 @@ I'm still learning how to encode fonts, so these will quickly clear up as time g
 - [lxml](https://lxml.de/)
 - [fonttools](https://github.com/fonttools/fonttools)
 
+## Collaborators
+- Dzuk
+- kiilas (thanks for all the help!)
 
 ## License
 

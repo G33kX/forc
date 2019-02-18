@@ -1,11 +1,32 @@
 from lxml.etree import Element
 
-def os2(metrics, OS2VendorID):
+def os2(OS2VendorID, metrics, glyphs):
     """
-    Creates an OS/2 table and fills it with both hard-coded and
-    user-defined metadata.
+    Creates an OS/2 table and fills it with both hard-coded,
+    automatically generated and user-defined metadata.
     """
 
+
+    singleCodepoints = []
+    twoByte = []
+
+    for g in glyphs:
+        if len(g.codepoints) == 1:
+            singleCodepoints.append(g.codepoints[0])
+
+            if g.codepoints[0] < int('ffff', 16):
+                twoByte.append(g.codepoints[0])
+
+
+    # ttx actually cannibalises this, but screw it, I'll do it anyway.
+    usFirstCharIndex = str(hex(min(twoByte)))
+    usLastCharIndex = str(hex(max(twoByte)))
+
+
+
+
+    # Make the table
+    # ----------------------------------------------------------------
 
     os2 = Element("OS_2")
 
@@ -15,7 +36,7 @@ def os2(metrics, OS2VendorID):
     os2.append(Element("usWeightClass", {'value': '500'})) # hard-coded?
     os2.append(Element("usWidthClass", {'value': '5'})) # hard-coded?
 
-    os2.append(Element("fsType", {'value': '00000000 00000000'})) # hard-coded. must agree with head's macStyle
+    os2.append(Element("fsType", {'value': '00000000 00000000'}))                                   # hard-coded. must agree with head.macStyle
 
 
 
@@ -66,21 +87,21 @@ def os2(metrics, OS2VendorID):
 
     os2.append(Element("achVendID", {'value': OS2VendorID}))
 
-    os2.append(Element("fsSelection", {'value': '00000000 00000000'})) # hard-coded
+    os2.append(Element("fsSelection", {'value': '00000000 00000000'}))                          # hard-coded
 
-    os2.append(Element("usFirstCharIndex", {'value': '0x0'}))
-    os2.append(Element("usLastCharIndex", {'value': '0x0'}))
+    os2.append(Element("usFirstCharIndex", {'value': usFirstCharIndex}))
+    os2.append(Element("usLastCharIndex", {'value': usLastCharIndex}))
 
     os2.append(Element("sTypoAscender", {'value': str(metrics['yMax']) }))
     os2.append(Element("sTypoDescender", {'value': str(metrics['OS2WeirdDescent']) }))
-    os2.append(Element("sTypoLineGap", {'value': str(metrics['lineGap']) }))
+    os2.append(Element("sTypoLineGap", {'value': "0" }))                                        # hard-coded based on best practices
     os2.append(Element("usWinAscent", {'value': str(metrics['yMax']) }))
     os2.append(Element("usWinDescent", {'value': str(metrics['OS2WeirdDescent']) }))
 
     os2.append(Element("ulCodePageRange1", {'value': '00000000 00000000 00000000 00000000'}))
     os2.append(Element("ulCodePageRange2", {'value': '00000000 00000000 00000000 00000000'}))
 
-    os2.append(Element("sxHeight", {'value': '0'})) # leaving it hard-coded at 0 for now.
+    os2.append(Element("sxHeight", {'value': '0'}))                                             # leaving it hard-coded at 0 for now.
     os2.append(Element("sCapHeight", {'value': str(metrics['yMax']) }))
 
     os2.append(Element("usDefaultChar", {'value': '0'}))
